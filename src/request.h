@@ -1,4 +1,5 @@
 #include<string>
+#include"response.h"
 
 namespace usp{
     class Request {
@@ -7,7 +8,7 @@ namespace usp{
             std::string method;
             std::string header;
         public:
-            std::string fetch(); //爬取
+            usp::Response fetch(); //爬取
             bool SetHeader(std::string header);//设置http的header的文本
     };
 }
