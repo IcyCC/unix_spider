@@ -1,10 +1,11 @@
+#pragma once
 #include<string>
 
 namespace usp{
     class WorkList {
         public:
-            bool put(std::string v);
-            std::string get();
-            bool is_empty();
+            bool Put(std::string v);
+            std::string Get();
+            bool IsEmpty();
     };
 }

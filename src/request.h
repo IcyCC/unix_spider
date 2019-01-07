@@ -1,3 +1,4 @@
+#pragma once
 #include<string>
 #include"response.h"
 
@@ -8,7 +9,7 @@ namespace usp{
             std::string method;
             std::string header;
         public:
-            usp::Response fetch(); //爬取
+            usp::Response Fetch(); //爬取
             bool SetHeader(std::string header);//设置http的header的文本
     };
 }

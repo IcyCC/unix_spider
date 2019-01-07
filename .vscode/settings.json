@@ -15,5 +15,6 @@
         "vector": "cpp",
         "string": "cpp",
         "fstream": "cpp"
-    }
+    },
+    "C_Cpp.errorSquiggles": "Enabled"
 }
