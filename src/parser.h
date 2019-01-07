@@ -2,9 +2,12 @@
 
 #include<string>
 #include <functional>
+#include <vector>
+#include "util.h"
 
 
 namespace usp {
+
 
     class BoolString {
     private:
@@ -31,7 +34,7 @@ namespace usp {
             return str;
         }
 
-        void ForEach( std::function<void (int, char, BoolString*bs)> f); // 用于遍历
+        void ForEach(std::function<void(int index, int r_index, char item, BoolString *bs)> f); // 用于遍历
 
         int Delete(int index) {
             pBoolean[index] = false;
@@ -42,13 +45,14 @@ namespace usp {
 
     class Parser {
     private:
-        BoolString *raw_text;
+        BoolString *raw_body;// 裸的文本部分
+        std::string raw_text;
 
     public:
         std::string body; //正文
         Parser(std::string raw); // 构造
         ~Parser() {
-            delete raw_text;
+            delete raw_body;
         };
 
         bool ParseMainBody();
