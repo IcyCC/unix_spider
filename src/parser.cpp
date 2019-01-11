@@ -80,11 +80,6 @@ bool usp::Parser::ParseMainBody() {
 
         text_weights[block_offset] = text_weights[block_offset] + tag_flag ? 1 : 0;
 
-        // TEMP::
-        if (tag_flag){
-            bs->Delete(r_index);
-        } //顺手删除标签内容
-
         if (item == '>') {
             // 标签结束时退出标签态
             tag_flag = false;
