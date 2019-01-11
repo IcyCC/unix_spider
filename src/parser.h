@@ -15,14 +15,14 @@ namespace usp {
         bool *pBoolean;
     private:
         void resetBoolean() {
-            for (int i = 0; i < str.length(); i++) {
+            for (int i = 0; i < int(str.length()); i++) {
                 pBoolean[i] = true;
             }
         };
     public:
         BoolString(std::string s) {
             str = s;
-            pBoolean = new bool(s.length());
+            pBoolean = new bool(int(str.length()));
             resetBoolean();
         }
 
@@ -31,8 +31,15 @@ namespace usp {
         }
 
         std::string toStr() {
-            return str;
+            std::string r_str;
+            for (int i = 0; i < int(str.length()); i++) {
+                if (pBoolean[i]) {
+                    r_str.push_back(str[i]);
+                }
+            }
+            return r_str;
         }
+
 
         void ForEach(std::function<void(int index, int r_index, char item, BoolString *bs)> f); // 用于遍历
 
@@ -47,6 +54,9 @@ namespace usp {
     private:
         BoolString *raw_body;// 裸的文本部分
         std::string raw_text;
+
+        const int C_DISTANCE = 200;
+        const float C_LIMIT = 0.6;
 
     public:
         std::string body; //正文
