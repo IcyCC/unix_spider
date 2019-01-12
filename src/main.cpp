@@ -24,8 +24,13 @@ int main(){
 
         auto p = usp::Parser(resp.RawBody());
 
+        p.ParseHeader();
+        p.ParseMainBody();
+
         auto data = usp::Data();
         data.body = p.GetMainBody();
+        data.title = p.GetTitle();
+        data.author = p.ReadMeta("author");
         data.Dumps("路径");
         
         auto sp_urls = p.GetAllUrls();
