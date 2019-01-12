@@ -3,15 +3,29 @@
 
 usp::Parser::Parser(std::string raw) {
     raw_text = raw;
-    auto r_b = raw.substr(
-            raw.find("<body"),
-            raw.rfind("/body>")
-    );
-    for (auto i : r_b) {
-        raw_body.push_back(i);
+
+    auto  body_begin = raw.find("<body");
+    auto body_end = raw.rfind("/body>");
+    if(body_begin!=std::string::npos && body_end != std::string::npos){
+        raw_body = raw.substr(
+                body_begin,
+                body_end
+        );
     }
-    raw_header = raw.substr(raw.find("<head>"),
-                            raw.rfind("/head>"));
+
+    for (auto i : raw_body) {
+        l_raw_body.push_back(i);
+    }
+
+    auto  header_begin = raw.find("<head");
+    auto header_end = raw.rfind("/head>");
+
+    if(header_begin!=std::string::npos && header_end != std::string::npos){
+        raw_header = raw.substr(
+                header_begin,
+                header_end
+        );
+    }
 }
 
 
@@ -26,7 +40,7 @@ bool usp::Parser::ParseMainBody() {
     std::vector<std::list<char>::iterator> wait_delete_stack;
     std::vector<std::list<char>::iterator> sure_delete_stack;
 
-    for (auto it = raw_body.begin(); it != raw_body.end(); it++) {
+    for (auto it = l_raw_body.begin(); it != l_raw_body.end(); it++) {
         char item = *(it);
         if (IsBeginWith(token, "<!-")) {
             if (IsEndWith(token, "->")) {
@@ -48,7 +62,7 @@ bool usp::Parser::ParseMainBody() {
             }
         } else if ((IsBeginWith(token, "<div") || IsEndWith(token, "<DIV")) && token.back() == '>') {
             token.clear();
-            std::cout<<"clear"<<std::endl;
+            std::cout << "clear" << std::endl;
             while (!wait_delete_stack.empty()) {
                 auto i = wait_delete_stack.back();
                 sure_delete_stack.push_back(i);
@@ -72,7 +86,7 @@ bool usp::Parser::ParseMainBody() {
 
     while (!sure_delete_stack.empty()) {
         auto i = sure_delete_stack.back();
-        raw_body.erase(i);
+        l_raw_body.erase(i);
         sure_delete_stack.pop_back();
     }
 
@@ -82,7 +96,7 @@ bool usp::Parser::ParseMainBody() {
     int text_weights[9000] = {0}; // 存储文本数量
     float tag_flag = false; // 标志是否处在标签内部
 
-    for (auto it = raw_body.cbegin(); it != raw_body.cend(); it++) {
+    for (auto it = l_raw_body.cbegin(); it != l_raw_body.cend(); it++) {
         ch_offset++;
         char item = *(it);
         if (item == '<') {
@@ -90,7 +104,7 @@ bool usp::Parser::ParseMainBody() {
             tag_flag = true;
         }
 
-        if (!tag_flag){
+        if (!tag_flag) {
             text_weights[block_offset]++;
         }
 
@@ -120,7 +134,8 @@ bool usp::Parser::ParseMainBody() {
         }
     }
 
-    auto pre = getRawBodyStr().substr(int(max_index*C_DISTANCE-thr_record[max_index]*C_DISTANCE), (int(thr_record[max_index]*C_DISTANCE) - 1));
+    auto pre = getRawBodyStr().substr(int(max_index * C_DISTANCE - thr_record[max_index] * C_DISTANCE),
+                                      (int(thr_record[max_index] * C_DISTANCE) - 1));
 
     body = DropTag(pre);
     return true;
