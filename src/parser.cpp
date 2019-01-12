@@ -106,7 +106,53 @@ bool usp::Parser::ParseMainBody() {
     }
 
     auto pre_body = usp::BoolString(raw_body->toStr().substr((max_index - thr_record[max_index]) * C_DISTANCE,
-                                                   thr_record[max_index] * C_DISTANCE));
+                                                             thr_record[max_index] * C_DISTANCE));
     body = pre_body.toStr();
     return true;
 }
+
+bool usp::Parser::ParseHeader() {
+    enum class ReadHeaderStatus {
+        NONE,
+        META_TAG,
+        TITLE,
+    };
+    ReadHeaderStatus status = ReadHeaderStatus::NONE; // 0 非tag内容 1 处于 mata tag 中 2 处于title tag中
+    std::string token;
+    for (auto i : raw_header) {
+        if (status == ReadHeaderStatus::NONE && i == '<') {
+            // 当前不在tag内部 并且发现进入tag标志清空
+            token.clear();
+        }
+        token.push_back(i);
+
+        // 根据 当前状态进入新的状态
+        if (status == ReadHeaderStatus::NONE && token == "<meta") {
+            // meta标签开始
+            status = ReadHeaderStatus::META_TAG;
+        } else if (status == ReadHeaderStatus::NONE && token == "<title>") {
+            // 开始于标签
+            status = ReadHeaderStatus::TITLE;
+            token.clear();
+        } else if (status == ReadHeaderStatus::TITLE && i == '<') {
+            // 认为标题结束
+            status = ReadHeaderStatus::NONE;
+            token.clear();
+        } else if (status == ReadHeaderStatus::TITLE) {
+            // 处于标题标签内
+            title.push_back(i);
+        } else if (status == ReadHeaderStatus::META_TAG && i == '>') {
+            // meta标签结束 进行解析
+            header.insert(ParseMeta(token));
+            token.clear();
+            status = ReadHeaderStatus::NONE;
+        }
+    }
+    return true;
+}
+
+
+std::vector<std::string> usp::Parser::GetAllUrls() {
+    return std::vector<std::string>();
+}
+

@@ -4,7 +4,9 @@
 namespace usp{
     class Data {
         public:
-            std::string body; //正文    
+            std::string body; //正文
+            std::string title; //标题
+            std::string author; //作者
 
             bool Loads(std::string path); //从文件加载
             bool Load(std::string ); //从字符串加载

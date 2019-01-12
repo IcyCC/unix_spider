@@ -3,6 +3,7 @@
 #include<string>
 #include <functional>
 #include <vector>
+#include <map>
 #include "util.h"
 
 
@@ -50,29 +51,46 @@ namespace usp {
         // 用于删除特定下标的字符
     };
 
+
+
     class Parser {
     private:
-        BoolString *raw_body;// 裸的文本部分
+        BoolString *raw_body = NULL;// 裸的文本部分
         std::string raw_text;
+        std::string raw_header;
 
         const int C_DISTANCE = 200;
         const float C_LIMIT = 0.6;
 
     public:
         std::string body; //正文
+        std::map<std::string, std::string> header;
+        std::string title;
+
         Parser(std::string raw); // 构造
+        Parser(){};
         ~Parser() {
-            delete raw_body;
+                delete raw_body;
         };
 
         bool ParseMainBody();
+        bool ParseHeader();
 
 
         std::string GetMainBody(); // 获取正文
+        std::string GetTitle() {
+            return title;
+        };
+        std::string ReadMeta(std::string key){
+            auto r = header.find(key);
+            if(r==header.end()){
+                return "";
+            } else {
+                return r->second;
+            }
+        }; //读meta
         std::vector<std::string> GetAllUrls();
 
-        std::string GetAuthor(); // 获取作者
-        std::string CommFind(); //通用查找
-
     };
+
 }
