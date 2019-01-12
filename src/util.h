@@ -6,6 +6,8 @@
 
 #include <string>
 #include <map>
+#include <list>
+#include <vector>
 
 inline bool IsSameDomainUrl(std::string a, std::string b){
     return false;
@@ -74,4 +76,49 @@ inline std::pair<std::string, std::string> ParseMeta(std::string text){
     }
 
     return std::pair<std::string, std::string>(name, content);
+}
+
+inline std::string List2String(std::list<char> s){
+    std::string res;
+    for(auto i : s){
+        res.push_back(i);
+    }
+    return res;
+}
+
+inline std::list<char> String2List(std::string s){
+    std::list<char> res;
+    for(auto i : s){
+        res.push_back(i);
+    }
+    return res;
+}
+
+inline  std::string DropTag(std::string s){
+    auto l = String2List(s);
+    std::vector<std::list<char>::iterator> sure_delete_stack;
+    enum DropTagStatus {
+        NONE,
+        TAG
+    };
+
+    DropTagStatus status = DropTagStatus::NONE;
+    for (auto it = l.begin(); it != l.end(); it++){
+        char item = *it;
+        if (item == '<'){
+            status = DropTagStatus::TAG;
+        }
+        if (status == DropTagStatus::TAG){
+            sure_delete_stack.push_back(it);
+        }
+        if (item == '>'){
+            status = DropTagStatus::NONE;
+        }
+    }
+    while (!sure_delete_stack.empty()) {
+        auto i = sure_delete_stack.back();
+        l.erase(i);
+        sure_delete_stack.pop_back();
+    }
+    return List2String(l);
 }
