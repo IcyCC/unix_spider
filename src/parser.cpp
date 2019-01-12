@@ -10,8 +10,8 @@ usp::Parser::Parser(std::string raw) {
     for (auto i : r_b) {
         raw_body.push_back(i);
     }
-//    raw_header = raw.substr(raw.find("<head>"),
-//                            raw.rfind("/head>"));
+    raw_header = raw.substr(raw.find("<head>"),
+                            raw.rfind("/head>"));
 }
 
 
