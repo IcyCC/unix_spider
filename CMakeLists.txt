@@ -6,6 +6,5 @@ set(CMAKE_CXX_STANDARD 14)
 include_directories(src)
 
 add_executable(unxi_spider
-        src/main.cpp
         src/parser.cpp
-        src/util.h)
+        src/util.h src/test.cpp)

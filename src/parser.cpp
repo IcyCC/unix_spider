@@ -18,6 +18,8 @@ usp::Parser::Parser(std::string raw) {
             raw.find("<body"),
             raw.rfind("/body>")
     ));
+    raw_header = raw.substr(raw.find("<head>"),
+                            raw.rfind("/head>"));
 }
 
 
@@ -127,7 +129,7 @@ bool usp::Parser::ParseHeader() {
         token.push_back(i);
 
         // 根据 当前状态进入新的状态
-        if (status == ReadHeaderStatus::NONE && token == "<meta") {
+        if (status == ReadHeaderStatus::NONE && (token == "<meta" || token=="<META")) {
             // meta标签开始
             status = ReadHeaderStatus::META_TAG;
         } else if (status == ReadHeaderStatus::NONE && token == "<title>") {
