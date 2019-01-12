@@ -2,18 +2,19 @@
 // Created by 苏畅 on 2019/1/7.
 // 常用的工具函数
 //
-
 #pragma once
 
 #include <string>
 #include <map>
+#include <list>
+#include <vector>
 
-bool IsSameDomainUrl(std::string a, std::string b){
+inline bool IsSameDomainUrl(std::string a, std::string b){
     return false;
 }
 
 
-bool IsBeginWith(std::string s, std::string m){
+inline bool IsBeginWith(std::string s, std::string m){
     if (m.length() > s.length()){
         return false;
     }
@@ -25,7 +26,7 @@ bool IsBeginWith(std::string s, std::string m){
     return true;
 }
 
-bool IsEndWith(std::string s, std::string m){
+inline bool IsEndWith(std::string s, std::string m){
     if (m.length() > s.length()){
         return false;
     }
@@ -38,14 +39,12 @@ bool IsEndWith(std::string s, std::string m){
 }
 
 
-std::pair<std::string, std::string> ParseMeta(std::string text){
+inline std::pair<std::string, std::string> ParseMeta(std::string text){
     // 用于把meta标签解析成k-v pair
     enum class MetaStatus{
         NONE,
         NAME,
-        NAME_V,
         CONTENT,
-        CONTENT_V,
     };
 
     MetaStatus status = MetaStatus::NONE;
@@ -54,34 +53,72 @@ std::pair<std::string, std::string> ParseMeta(std::string text){
     std::string content;
 
     for (auto i : text){
-        if(i == ' '){
-            // 清空token
-            token.clear();
-        } else {
-            token.push_back(i);
-        }
-
-        if (status == MetaStatus::NONE&&(token == "name" || token == "http-equiv")){
+        token.push_back(i);
+        if (status == MetaStatus::NONE&&(token == "name=\"" || token == "http-equiv=\"")){
             // NONE + name
             status = MetaStatus::NAME;
-        } else if (status == MetaStatus::NONE && token =="content"){
+        } else if (status == MetaStatus::NONE && token =="content=\""){
             // NONE + content
             status = MetaStatus::CONTENT;
-        } else if (status == MetaStatus::NAME && i == '"'){
-            // NAME  " 内容开始
-            status = MetaStatus::NAME_V;
-        } else if (status == MetaStatus::CONTENT && i == '"'){
-            // CONTENT  " 内容开始
-            status = MetaStatus::CONTENT_V;
-        } else if (status == MetaStatus::NAME_V && i != '"'){
-            name.push_back(i);
-        } else if (status == MetaStatus::CONTENT_V && i != '"'){
-            content.push_back(i);
-        } else if ((status == MetaStatus::NAME_V || status == MetaStatus::CONTENT_V) && i == '"'){
+        } else if (status == MetaStatus::NONE && token == "charset=\"") {
+            name = "charset";
+            status = MetaStatus::CONTENT;
+        }else if ((status == MetaStatus::NAME || status == MetaStatus::CONTENT) && i == '"'){
             status = MetaStatus::NONE;
+            token.clear();
+        }else if (status == MetaStatus::NAME){
+            name.push_back(i);
+        } else if (status == MetaStatus::CONTENT){
+            content.push_back(i);
+        }  else if (status ==MetaStatus::NONE && i == ' '){
             token.clear();
         }
     }
 
     return std::pair<std::string, std::string>(name, content);
+}
+
+inline std::string List2String(std::list<char> s){
+    std::string res;
+    for(auto i : s){
+        res.push_back(i);
+    }
+    return res;
+}
+
+inline std::list<char> String2List(std::string s){
+    std::list<char> res;
+    for(auto i : s){
+        res.push_back(i);
+    }
+    return res;
+}
+
+inline  std::string DropTag(std::string s){
+    auto l = String2List(s);
+    std::vector<std::list<char>::iterator> sure_delete_stack;
+    enum DropTagStatus {
+        NONE,
+        TAG
+    };
+
+    DropTagStatus status = DropTagStatus::NONE;
+    for (auto it = l.begin(); it != l.end(); it++){
+        char item = *it;
+        if (item == '<'){
+            status = DropTagStatus::TAG;
+        }
+        if (status == DropTagStatus::TAG){
+            sure_delete_stack.push_back(it);
+        }
+        if (item == '>'){
+            status = DropTagStatus::NONE;
+        }
+    }
+    while (!sure_delete_stack.empty()) {
+        auto i = sure_delete_stack.back();
+        l.erase(i);
+        sure_delete_stack.pop_back();
+    }
+    return List2String(l);
 }

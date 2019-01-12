@@ -31,8 +31,8 @@ int main(){
         data.body = p.GetMainBody();
         data.title = p.GetTitle();
         data.author = p.ReadMeta("author");
-        data.Dumps("路径");
-        
+        data.Dumps("");
+
         auto sp_urls = p.GetAllUrls();
 
         for (auto sp_url : sp_urls){
