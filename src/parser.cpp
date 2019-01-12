@@ -153,6 +153,32 @@ bool usp::Parser::ParseHeader() {
 
 
 std::vector<std::string> usp::Parser::GetAllUrls() {
-    return std::vector<std::string>();
+
+    enum class UrlParseStatus {
+        NONE,
+        URL,
+    };
+
+    auto res = std::vector<std::string>();
+    UrlParseStatus status = UrlParseStatus::NONE;
+    std::string token;
+    for (auto i : raw_text) {
+        if (i == ' '){
+            token.clear();
+        } else {
+            token.push_back(i);
+        }
+
+        if (status==UrlParseStatus::NONE && token == "href=\"") {
+            status = UrlParseStatus::URL;
+            token.clear();
+        } else if (status == UrlParseStatus::URL && i == '"'){
+            token.pop_back();
+            res.push_back(token);
+            token.clear();
+            status = UrlParseStatus::NONE;
+        }
+    }
+    return res;
 }
 
