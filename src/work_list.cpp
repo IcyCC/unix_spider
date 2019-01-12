@@ -14,7 +14,7 @@ std::string Get()
     unprocessed.pop_back();         //从未处理url中删除获取
     return geturl;
 }
-bool Isempty()
+bool IsEmpty()
 {
     if(unprocessed.empty());
         return true;
