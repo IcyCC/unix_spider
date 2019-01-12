@@ -15,7 +15,8 @@ namespace usp {
 
     class Parser {
     private:
-        std::list<char> raw_body;// 裸的文本部分
+        std::list<char> l_raw_body;// 裸的文本部分
+        std::string raw_body;
         std::string raw_text;
         std::string raw_header;
 
@@ -24,7 +25,7 @@ namespace usp {
 
         std::string getRawBodyStr(){
             std::string res;
-            for(auto i : raw_body){
+            for(auto i : l_raw_body){
                 res.push_back(i);
             }
             return res;
