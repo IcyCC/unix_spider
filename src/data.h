@@ -1,6 +1,7 @@
 #pragma once
 #include<string>
-
+#include<iostream>
+#include<fstream>
 namespace usp{
     class Data {
         public:
@@ -8,9 +9,9 @@ namespace usp{
             std::string title; //标题
             std::string author; //作者
 
-            bool Loads(std::string path); //从文件加载
-            bool Load(std::string ); //从字符串加载
-            std::string Dump(); //生成字符串
-            bool Dumps (std::string path);// 写入到文件
+            static Data  Loads(std::string path); //从文件加载
+            bool Load(std::string );        //从字符串加载
+            std::string Dump();             //生成字符串
+            bool Dumps (std::string path);  // 写入到文件
             };
 }

@@ -1,12 +1,12 @@
 #include "work_list.h"
 
-bool Put(std::string str)
+bool usp::Put(std::string str)
 {
     unprocessed.push_back(str);
     return true;
 }
 
-std::string Get()
+std::string usp::Get()
 {
     std::string geturl;
     geturl = unprocessed.back();    //获取最后一个元素
@@ -14,7 +14,7 @@ std::string Get()
     unprocessed.pop_back();         //从未处理url中删除获取
     return geturl;
 }
-bool IsEmpty()
+bool usp::IsEmpty()
 {
     if(unprocessed.empty());
         return true;
