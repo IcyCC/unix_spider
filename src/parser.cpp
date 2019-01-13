@@ -94,7 +94,7 @@ bool usp::Parser::ParseMainBody() {
     int ch_offset = 0; // 标记字符偏移量
     int block_offset = 0; // 记录块便宜
     int text_weights[9000] = {0}; // 存储文本数量
-    float tag_flag = false; // 标志是否处在标签内部
+    bool tag_flag = false; // 标志是否处在标签内部
 
     for (auto it = l_raw_body.cbegin(); it != l_raw_body.cend(); it++) {
         ch_offset++;
@@ -134,13 +134,16 @@ bool usp::Parser::ParseMainBody() {
         }
     }
 
-    // 找开始点
     auto pre = getRawBodyStr();
-//    for (auto it = pre.begin(); it != pre.end(); it++) {
-//
-//    }
+    int start_pos = max_index-thr_record[max_index];
+    int end_pos = max_index;
+    int mid_pos = ((end_pos - start_pos) / 2) + start_pos;
 
-    body = DropTag(pre);
+    auto start_info = FindMaxTag2WordPos(pre, start_pos, mid_pos);
+    auto end_info = FindMaxWord2TagPos(pre, mid_pos, end_pos);
+    // 找开始点
+
+    body = DropTag(pre.substr(start_info.first, end_info.first));
     return true;
 }
 
