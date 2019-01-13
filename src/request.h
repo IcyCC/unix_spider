@@ -12,7 +12,6 @@
 #include <arpa/inet.h>  
 #include <netdb.h>  
 #include <string>
-using namespace std;
 namespace usp{
     class Request {
         private: 
