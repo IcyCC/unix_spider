@@ -13,6 +13,17 @@ inline bool IsSameDomainUrl(std::string a, std::string b){
     return false;
 }
 
+inline std::string GetUrlDomain(std::string url ){
+    // 获取url的主机
+
+    return "";
+}
+
+inline std::string JoinUrl(std::string domain, std::string path){
+    //拼接url
+    return "";
+}
+
 
 inline bool IsBeginWith(std::string s, std::string m){
     if (m.length() > s.length()){
@@ -122,3 +133,5 @@ inline  std::string DropTag(std::string s){
     }
     return List2String(l);
 }
+
+
