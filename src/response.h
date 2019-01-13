@@ -1,6 +1,5 @@
 #pragma once
 #include<string>
-#include <map>
 
 namespace usp{
     class Response {
@@ -11,8 +10,8 @@ namespace usp{
             std::string raw;
             std::string body;
 
-            std::string ReadHeader(std::string key); // æ ¹æ®keyè¯»å–http header
-            std::string RawHeader(); // è£¸çš„å“åº”å¤´
-            std::string RawBody(); // è£¸çš„æ–‡æœ¬ä¿¡æ¯
+            std::string ReadHeader(std::string key); // ¸ù¾İkey¶ÁÈ¡http header
+            std::string GetRawHeader(); // ÂãµÄÏìÓ¦Í·
+            std::string GetRaw(); // ÂãµÄÎÄ±¾ĞÅÏ¢
     };
 }
