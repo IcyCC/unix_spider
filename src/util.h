@@ -157,5 +157,55 @@ inline std::string Getpath(std::string url)
 	else
 		url= url.substr(pos);
 	return url;
-}  
-
+} 
+inline std::map<std::string, std::string> ParseHttpHeader(std::string raw)
+{
+	int pos=raw.find("\n");
+	if (pos != raw.npos) raw = raw.substr(pos);	
+	char * strc = new char[strlen(raw.c_str())+1];
+	strcpy(strc, raw.c_str());
+	string pattern="\n";
+	vector <string> result;
+	char* tmpStr=strtok(strc,pattern.c_str());
+	while(tmpStr!=NULL)
+	{
+		result.push_back(string(tmpStr));
+		tmpStr=strtok(NULL,pattern.c_str());
+	}
+	map<std::string, std::string> mapPara;
+	for (int i = 0; i < result.size(); i++)
+	{
+	    int pos=result[i].find(":");
+	    if(pos!=result[i].npos)
+	    {
+		   string behind=result[i].substr(pos+1);
+	       string front=result[i].substr(0,pos);
+		   mapPara.insert(pair<std::string, std::string>(front,behind));
+	   	}
+	}
+	delete[] strc ; 
+	/*std::map<std::string, std::string>::iterator it;
+	for(it = mapPara.begin(); it != mapPara.end(); it++)
+	        cout << it->first << " " << it->second << endl;*/
+	return mapPara;
+} 
+inline std::map<std::string, std::string> ParseUrl(std::string url)
+{
+	map<std::string, std::string> mapUrl;	
+	int pos=url.find("://")	;
+	string protocol;
+	if(pos!=url.npos) 
+		protocol=url.substr(0,pos);
+	mapUrl.insert(pair<std::string, std::string>("protocol",protocol));
+	url=url.substr(pos+3);
+	string domain;
+	pos=url.find("/");
+	domain=url.substr(0,pos);
+	mapUrl.insert(pair<std::string, std::string>("domain",domain));
+	url=url.substr(pos+1);
+	mapUrl.insert(pair<std::string, std::string>("path",url));
+	/*std::map<std::string, std::string>::iterator it;
+		for(it = mapUrl.begin(); it != mapUrl.end(); it++)
+		        cout << it->first << " " << it->second << endl;*/
+	return mapUrl;
+}
