@@ -19,7 +19,7 @@ int main(){
 
         auto url = url_sets.Get();
 
-        auto req = usp::Request();
+        auto req = usp::Request(method="GET", url=url);
         auto resp = req.Fetch();
 
         auto p = usp::Parser(resp.RawBody());

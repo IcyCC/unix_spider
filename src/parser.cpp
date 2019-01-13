@@ -134,8 +134,11 @@ bool usp::Parser::ParseMainBody() {
         }
     }
 
-    auto pre = getRawBodyStr().substr(int(max_index * C_DISTANCE - thr_record[max_index] * C_DISTANCE),
-                                      (int(thr_record[max_index] * C_DISTANCE) - 1));
+    // 找开始点
+    auto pre = getRawBodyStr();
+//    for (auto it = pre.begin(); it != pre.end(); it++) {
+//
+//    }
 
     body = DropTag(pre);
     return true;
