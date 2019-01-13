@@ -41,6 +41,8 @@ bool  usp::Data::Load(std::string str) //从字符串加载
     data.author = res[1];
     data.body = res[2];
 
+    delete [] d;
+    delete [] strs;
     return true;
 }
 
