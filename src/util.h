@@ -123,17 +123,27 @@ inline  std::string DropTag(std::string s){
     return List2String(l);
 }
 
-inline std::string gethost(string url)
+inline std::string Gethost(std::string url)
 {
     size_t pos=url.find("://");
     if(pos!=url.npos)
         url=url.substr(pos+3);
-        
     pos=url.find("/");
     if(pos==url.npos)
         cout<<url;
     else
     url=url.substr(0,pos);
     return url;
-        
-}   
+} 
+
+inline std::string Getpath(std::string url)
+{
+	size_t pos = url.find("://");
+	if (pos != url.npos) url = url.substr(pos + 3);
+	pos = url.find('/');
+	if(pos == url.npos) 
+		url="/";
+	else
+		url= url.substr(pos);
+	return url;
+}  
