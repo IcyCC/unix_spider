@@ -1,7 +1,18 @@
-#pragma once
-#include<string>
-#include"response.h"
+﻿#pragma once
 
+#include"response.h"
+#include"util"
+#include <iostream>
+#include <stdio.h>  
+#include <stdlib.h>  
+#include <string.h>  
+#include <unistd.h>
+#include <sys/socket.h>  
+#include <netinet/in.h>  
+#include <arpa/inet.h>  
+#include <netdb.h>  
+#include <string>
+using namespace std;
 namespace usp{
     class Request {
         private: 
