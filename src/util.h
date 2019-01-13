@@ -8,21 +8,73 @@
 #include <map>
 #include <list>
 #include <vector>
+#include <cstring>
 
-inline bool IsSameDomainUrl(std::string a, std::string b){
-    return false;
+inline std::string delim(std::string str,std::string delim, int pos)//分割源字符、分割字符、返回容器元素位置
+{
+    std::vector<std::string> res;
+    char *strs = new char[str.length() + 1];
+    strcpy(strs,str.c_str());
+
+    char *d = new char[delim.length() + 1];
+    strcpy(d,delim.c_str());
+
+    char *p = strtok(strs,d);
+    while(p)
+    {
+        std::string s = p;
+        res.push_back(s);
+        p = strtok(NULL,d);
+    }  
+
+    delete [] strs;
+    delete [] d;
+    return res[pos];
 }
+
 
 inline std::string GetUrlDomain(std::string url ){
     // 获取url的主机
+    std::string domain;
 
-    return "";
+    int position = url.find("http://");
+    //若url前面有http://,则分割后容器中第二个元素位域名，否则，第一个元素为域名
+    if(position >= 0)
+    {
+        domain = delim(url,"/",1);    
+        return domain;    
+    }
+    domain = delim(url,"/",0);
+    return domain;
 }
+
+inline bool IsSameDomainUrl(std::string a, std::string b){
+    
+    std::string a_domain = GetUrlDomain(a);
+    std::string b_domain = GetUrlDomain(b);
+    if(a_domain == b_domain)    return true;
+    return false;
+}
+
 
 inline std::string JoinUrl(std::string domain, std::string path){
     //拼接url
-    return "";
+    std::string complete_url;
+    complete_url = domain + path;
+    return complete_url;
 }
+
+inline std::string StdUrl(std::string url){
+    //标准化url
+    std::string std_url;
+    int position = url.find("http://");
+    if(position >= 0)        //匹配到http://
+        return url;
+    else
+        std_url = "http://" + url;
+    return std_url;
+}
+
 
 
 inline bool IsBeginWith(std::string s, std::string m){
