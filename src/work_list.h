@@ -1,12 +1,13 @@
 #pragma once
 #include<string>
+#include<vector>
 
 namespace usp{
     class WorkList {
         public:
-            bool put(std::string v);
-            std::string get(); 
-            bool is_empty();
+            bool Put(std::string v);
+            std::string Get(); 
+            bool IsEmpty();
             std::vector<std::string> unprocessed;   //未处理的url
             std::vector<std::string> processed;     //已处理的url
     };

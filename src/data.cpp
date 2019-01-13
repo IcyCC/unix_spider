@@ -1,27 +1,27 @@
 #include "data.h"
 
-usp::Data Loads(std::string path)
+usp::Data usp::Data::Loads(std::string path)
 {
     usp::Data data;
-    ifstream infile(path);
+    std::ifstream infile(path);
     if(!infile)
     {
-        cout <<"open file error !"<<endl;
+        std::cout <<"open file error !"<< std::endl;
         getchar();
-        return false;
+        exit(0);
     }
     //file.read((char *)&data,sizeof(string));
 
     infile >> data.title >> data.author >> data.body;
-    infile.close()
+    infile.close();
     return data;
 }
 
-bool usp::Load(std::string str) //从字符串加载
+bool  usp::Data::Load(std::string str) //从字符串加载
 {
     usp::Data data;
     std::vector<std::string> res;
-    if("" == string)    return false;
+    if("" == str)    return false;
     char *strs = new char[str.length() + 1];
     strcpy(strs,str.c_str());
 
@@ -33,7 +33,7 @@ bool usp::Load(std::string str) //从字符串加载
     while(p)
     {
         std::string s = p;
-        res.pusk_back(s);
+        res.push_back(s);
         p = strtok(NULL,d);
     }
 
@@ -44,7 +44,7 @@ bool usp::Load(std::string str) //从字符串加载
     return true;
 }
 
-std::string usp::Dump() //生成字符串
+std::string  usp::Data::Dump() //生成字符串
 {
     usp::Data data;
     std::string str;
@@ -52,13 +52,13 @@ std::string usp::Dump() //生成字符串
     return str;
 }
 
-bool usp::Dumps (std::string path)// 写入到文件
+bool  usp::Data::Dumps (std::string path)// 写入到文件
 {
     usp::Data data;
-    fstream infile(path,ios::in | ios::bindary)
+    std::fstream infile(path,std::ios::in | std::ios::binary);
     if(!infile)
     {
-        cout <<"open file error !"<<endl;
+        std::cout <<"open file error !"<<std::endl;
         getchar();
         return false;
     }
