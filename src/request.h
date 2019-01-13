@@ -12,6 +12,9 @@
 #include <arpa/inet.h>  
 #include <netdb.h>  
 #include <string>
+#include <map>
+#include <vector>
+using namespace std;
 namespace usp{
     class Request {
         private: 
