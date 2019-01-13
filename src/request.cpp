@@ -8,15 +8,7 @@ bool usp::Request::SetHeader(std::string header)
     return 1;
 }
 
-string httpsend(string header)
-{
-	
- header="Host:"+gethost 
 
-
-  
-printf("%s",message);  
-}
 usp::Response usp::Request:: Fetch()
 {
 	
@@ -50,13 +42,14 @@ usp::Response usp::Request:: Fetch()
 	exit(1);  
 	}    
 	string path=Getpath(url);  
-	string header;
-//采用get方式获取数据，没有传递参数情况下采用这种方式  
+	string header_0;
+	header_0="Host:"+host.c_str();+"\r\n"+"Accept: */*\r\n"+"User-Agent: Mozilla/4.0(compatible)\r\n"+"connection:Keep-Alive\r\n"+ "connection:Keep-Alive\r\n"+"\r\n\r\n";
+	Setheader(header_0);
+	//采用get方式获取数据，没有传递参数情况下采用这种方式  
 	sprintf(message, method.c_str());  
 	strcat(message,path.c_str());
 	strcat(message," HTTP/1.1\r\n");
     strcat(message,header.c_str());
-	
 	
   
 	printf("%s",message);  
@@ -94,7 +87,6 @@ usp::Response usp::Request:: Fetch()
 		printf("%c",*buffer);  
 		
 		response.header=*buffer;
-}
 		do  
 		{  
 			
@@ -111,7 +103,7 @@ usp::Response usp::Request:: Fetch()
 		close(isock);  
 		return response;  
 		
-	  
+	}  
 
   
 	
