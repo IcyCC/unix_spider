@@ -8,8 +8,16 @@ bool usp::Request::SetHeader(std::string header)
     return 1;
 }
 
+string httpsend(string header)
+{
+	
+ header="Host:"+gethost 
 
-Response usp::Request:: Fetch()
+
+  
+printf("%s",message);  
+}
+usp::Response usp::Request:: Fetch()
 {
 	
 	
@@ -63,7 +71,47 @@ Response usp::Request:: Fetch()
 	{  
 		printf("Error in send\n");  
 		exit(1);  
-	}  
+	} 
+	Response response;
+	while(done == 0)  
+	{  
+		l = recv(isock, buffer, 1, 0);  
+		if( l < 0 )  
+		done = 1;  
+		switch(*buffer)  
+		{  
+			case '\r':  
+				break;  
+			case '\n':  
+				if(chars == 0)  
+					done = 1;  
+					chars = 0;  
+				break;  
+			default:  
+				chars++;  
+				break;  
+		}  
+		printf("%c",*buffer);  
+		
+		response.header=*buffer;
+}
+		do  
+		{  
+			
+			l = recv(isock, buffer, sizeof(buffer) - 1, 0);  
+			response.body=buffer;
+			//printf("%s\n",buffer);
+			if( l < 0 )  
+			break;  
+			*(buffer + l) = 0; 
+			//fprintf(fp,"%s",buffer);
+			
+		}while( l > 0 );  
+		
+		close(isock);  
+		return response;  
+		
+	  
 
   
 	
