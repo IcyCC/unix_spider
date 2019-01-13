@@ -164,22 +164,22 @@ inline std::map<std::string, std::string> ParseHttpHeader(std::string raw)
 	if (pos != raw.npos) raw = raw.substr(pos);	
 	char * strc = new char[strlen(raw.c_str())+1];
 	strcpy(strc, raw.c_str());
-	string pattern="\n";
-	vector <string> result;
+	std::string pattern="\n";
+	std::vector <string> result;
 	char* tmpStr=strtok(strc,pattern.c_str());
 	while(tmpStr!=NULL)
 	{
 		result.push_back(string(tmpStr));
 		tmpStr=strtok(NULL,pattern.c_str());
 	}
-	map<std::string, std::string> mapPara;
+	std::map<std::string, std::string> mapPara;
 	for (int i = 0; i < result.size(); i++)
 	{
 	    int pos=result[i].find(":");
 	    if(pos!=result[i].npos)
 	    {
-		   string behind=result[i].substr(pos+1);
-	       string front=result[i].substr(0,pos);
+		   std::string behind=result[i].substr(pos+1);
+	       std::string front=result[i].substr(0,pos);
 		   mapPara.insert(pair<std::string, std::string>(front,behind));
 	   	}
 	}
@@ -191,14 +191,14 @@ inline std::map<std::string, std::string> ParseHttpHeader(std::string raw)
 } 
 inline std::map<std::string, std::string> ParseUrl(std::string url)
 {
-	map<std::string, std::string> mapUrl;	
+	std::map<std::string, std::string> mapUrl;	
 	int pos=url.find("://")	;
-	string protocol;
+	std::string protocol;
 	if(pos!=url.npos) 
 		protocol=url.substr(0,pos);
 	mapUrl.insert(pair<std::string, std::string>("protocol",protocol));
 	url=url.substr(pos+3);
-	string domain;
+	std::string domain;
 	pos=url.find("/");
 	domain=url.substr(0,pos);
 	mapUrl.insert(pair<std::string, std::string>("domain",domain));

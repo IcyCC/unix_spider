@@ -5,8 +5,13 @@ namespace usp{
     class Response {
         
         public:
-            std::string ReadHeader(std::string key); // æ ¹æ®keyè¯»å–http header
-            std::string RawHeader(); // è£¸çš„å“åº”å¤´
-            std::string RawBody(); // è£¸çš„æ–‡æœ¬ä¿¡æ¯
+            int status;
+            std::map<std::string, std::string> header;
+            std::string raw;
+            std::string body;
+
+            std::string ReadHeader(std::string key); // ¸ù¾İkey¶ÁÈ¡http header
+            std::string GetRawHeader(); // ÂãµÄÏìÓ¦Í·
+            std::string GetRaw(); // ÂãµÄÎÄ±¾ĞÅÏ¢
     };
 }
