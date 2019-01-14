@@ -40,15 +40,23 @@ inline std::vector<std::string> SpliteString(std::string src, std::string sp) {
 /*创建类似于a/b/c/d 文件夹*/
 int CreateDirectory(const std::string directoryPath)
 {
-    int dirPathLen = directoryPath.length();
+    std::string temp;
+
+    if(directoryPath[0] == '/')
+        temp = "." + directoryPath;   
+    else
+        temp = directoryPath;
+    
+    int dirPathLen = temp.length();
     if (dirPathLen > MAX_PATH_LEN)
     {
-        return -1;
+        return -1;  
     }
+
     char tmpDirPath[MAX_PATH_LEN] = { 0 };
     for (int i = 0; i < dirPathLen; ++i)
     {
-        tmpDirPath[i] = directoryPath[i];
+        tmpDirPath[i] = temp[i];
         if (tmpDirPath[i] == '\\' || tmpDirPath[i] == '/')
         {
             if (ACCESS(tmpDirPath, 0) != 0)
