@@ -33,3 +33,6 @@
 
 .idea
 .vscode
+.bin
+.obj
+.debug
