@@ -9,6 +9,7 @@
 #include <list>
 #include <vector>
 #include <cstring>
+#include <sstream>
 
 inline std::string delim(std::string str,std::string delim, int pos)//分割源字符、分割字符、返回容器元素位置
 {
@@ -33,19 +34,43 @@ inline std::string delim(std::string str,std::string delim, int pos)//分割源�
 }
 
 
-inline std::string GetUrlDomain(std::string url ){
-    // 获取url的主机
-    std::string domain;
+inline bool IsAbsUrl(std::string url)
+{
+    //根据URL的构成，由两部分构成：<Schema>:<特定于本schema的子串> 因此,只要直接判有没有字符 ":" 就行。有：是绝对，没有相对。
+    if(url.find(":") >= 0)
+        return true;
+    //url第一个字符为“.”或"/"时，为相对路径
+    else if(url[0] != "." || url[0] != "/")
+        return true;
 
-    int position = url.find("http://");
-    //若url前面有http://,则分割后容器中第二个元素位域名，否则，第一个元素为域名
-    if(position >= 0)
-    {
-        domain = delim(url,"/",1);    
-        return domain;    
+    return false;
+}
+
+int GetUrlLevel(std::string url)
+{
+    std::vector<std::string> delim_url;
+    std::string temp;
+    istringstream is(url);
+    //将url分割放入容器，读取容器大小，即为level
+    while (getline(iss, temp, "/")) {
+        delim_url.push_back(temp);
     }
-    domain = delim(url,"/",0);
-    return domain;
+
+    return delim_url.size();    
+}
+
+inline std::string GetUrlDomain(std::string url){
+    // 获取url的主机
+    std::string com_domain;     //格式如www.abc.com
+    std::string mini_domain;    //得到com_domain中的最小级域名，如abc
+    //若url前面有http://,则分割后容器中第二个元素为域名，否则，第一个元素为域名
+    if(url.find("http://") >= 0)
+    {
+        com_domain = delim(url,"/",1);       
+    }
+    com_domain = delim(url,"/",0);
+    mini_domain = delim(com_domain,".",1);
+    return mini_domain;
 }
 
 inline bool IsSameDomainUrl(std::string a, std::string b){
@@ -60,7 +85,7 @@ inline bool IsSameDomainUrl(std::string a, std::string b){
 inline std::string JoinUrl(std::string domain, std::string path){
     //拼接url
     std::string complete_url;
-    complete_url = domain + path;
+    complete_url = domain + "/" + path;
     return complete_url;
 }
 
@@ -74,8 +99,6 @@ inline std::string StdUrl(std::string url){
         std_url = "http://" + url;
     return std_url;
 }
-
-
 
 inline bool IsBeginWith(std::string s, std::string m){
     if (m.length() > s.length()){

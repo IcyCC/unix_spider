@@ -94,7 +94,7 @@ usp::Response usp::Request:: Fetch()
 		printf("%c",*buffer);  
 		
 		response.header=*buffer;
-}
+	}
 		do  
 		{  
 			
