@@ -16,19 +16,27 @@ auto work_list = usp::WorkList();
 
 
 int main() {
-    const int P_NUM = 10;
 
     work_list.Put("http://www.gmw.cn/");
     while (!work_list.IsEmpty()) {
 
         auto url = work_list.Get();
-        if (url == "EXIT") {
-            return NULL;
-        }
+
         auto req = usp::Request(url);
         auto resp = req.Fetch();
         if (resp.status != 200) {
             cout << "ERROR" << "  URL: " << url << "失败  状态码 :" << resp.status << endl;
+            if (resp.status > 300 && resp.status <310){
+               auto redir_url = resp.ReadHeader("Locatioin");
+               if (redir_url == ""){
+                   continue;
+               }
+               redir_url = StdUrl(redir_url);
+               if(!IsSameDomainUrl(url, redir_url)){
+                   work_list.Put(redir_url);
+               }
+            }
+            continue;
         }
         auto par = usp::Parser(resp.body);
         par.ParseHeader();
