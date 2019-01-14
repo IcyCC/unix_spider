@@ -53,7 +53,7 @@ int GetUrlLevel(std::string url)
     while (std::getline(is, temp, '/')) {
         delim_url.push_back(temp);
     }
-    if(url.find("//") >= 0)
+    if(url.find("//") != string::npos)
         return delim_url.size() - 1;  
     return delim_url.size(); 
 }
