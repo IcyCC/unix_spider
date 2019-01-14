@@ -16,7 +16,9 @@ std::string usp::WorkList::Get()
 }
 bool usp::WorkList::IsEmpty()
 {
-    if(unprocessed.empty());
+    if(unprocessed.empty())
+    {
         return true;
+    }
     return false;
 }
