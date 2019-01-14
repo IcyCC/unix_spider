@@ -57,7 +57,7 @@ std::string  usp::Data::Dump() //生成字符串
 bool  usp::Data::Dumps (std::string path)// 写入到文件
 {
     usp::Data data;
-    std::fstream infile(path,std::ios::in | std::ios::binary);
+    std::fstream infile(path,std::ios::in|std::ios::out);
     if(!infile)
     {
         std::cout <<"open file error !"<<std::endl;
