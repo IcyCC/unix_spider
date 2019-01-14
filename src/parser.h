@@ -9,9 +9,9 @@
 #include <iterator>
 #include "util.h"
 
-
 namespace usp {
 
+    const std::string SPECIAL_NONE = "NULL&NONE";
 
     class Parser {
     private:
@@ -32,7 +32,6 @@ namespace usp {
         };
 
     public:
-        const std::string SPECIAL_NONE = "NULL&NONE";
 
         std::string body; //正文
         std::map<std::string, std::string> header;

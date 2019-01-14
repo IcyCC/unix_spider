@@ -8,8 +8,8 @@ include_directories(src)
 add_executable(unxi_spider
         src/parser.cpp
         src/util.h
-        src/test.cpp
+        src/main.cpp
         src/request.cpp
         src/work_list.cpp
         src/response.cpp
-        src/data.cpp src/buffer.cpp src/buffer.cpp src/buffer.h)
+        src/data.cpp)
