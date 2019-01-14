@@ -65,7 +65,8 @@ bool  usp::Data::Dumps (std::string path)// 写入到文件
         return false;
     }
     auto res = Dump();
-    infile.write(res.c_str(),sizeof(res.c_str()));
+    std::cout<<res<<std::endl;
+    infile<<res.c_str();
     infile.close();
     return true;
 }
