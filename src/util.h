@@ -34,7 +34,6 @@ inline std::string delim(std::string str,std::string delim, int pos)//分割源�
 }
 
 
-
 inline bool IsAbsUrl(std::string url)
 {
     //根据URL的构成，由两部分构成：<Schema>:<特定于本schema的子串> 因此,只要直接判有没有字符 ":" 就行。有：是绝对，没有相对。
@@ -87,19 +86,17 @@ inline bool IsSameDomainUrl(std::string a, std::string b){
 }
 
 
-
-inline std::string JoinUrl(std::string domain, std::string path){
-    //拼接url
-    std::string complete_url;
-    complete_url = domain + "/" + path;
-    return complete_url;
-}
+// inline std::string JoinUrl(std::string domain, std::string path){
+//     //拼接url
+//     std::string complete_url;
+//     complete_url = domain + "/" + path;
+//     return complete_url;
+// }
 
 inline std::string StdUrl(std::string url){
     //标准化url
     std::string std_url;
-    int position = url.find("http://");
-    if(position >= 0)        //匹配到http://
+    if(url.find("http://") != string::npos)        //匹配到http://
         return url;
     else
         std_url = "http://" + url;
