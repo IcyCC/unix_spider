@@ -5,6 +5,7 @@
 #include"data.h"
 #include"work_list.h"
 #include"parser.h"
+#include "url.h"
 
 using namespace std;
 
