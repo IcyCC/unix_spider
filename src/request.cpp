@@ -29,7 +29,6 @@ usp::Response usp::Request::Fetch() {
     //打开socket
     if ((isock = socket(AF_INET, SOCK_STREAM, 0)) == -1) {
         printf("Error opening socket!\n");
-        exit(1);
     }
     std::string path = GetPath(url);
     std::string header_0;
@@ -40,13 +39,13 @@ usp::Response usp::Request::Fetch() {
 
     if (connect(isock, (struct sockaddr *) &pin, sizeof(pin)) == -1) {
         printf("Error connecting to socket\n");
-        exit(1);
+        return Response("");
     }
 
     if (send(isock, message.c_str(), strlen(message.c_str()), 0) == -1) {
         printf("Error in send\n");
-        exit(1);
-    }
+        return Response("");
+   }
 
     std::string res;
     std::cout<< "INFO: 准备接受  URL: "<< url<<std::endl;
