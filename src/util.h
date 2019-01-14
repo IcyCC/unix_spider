@@ -10,7 +10,6 @@
 #include <sstream>
 #include <vector>
 #include <cstring>
-#include <sstream>
 
 inline std::string delim(std::string str,std::string delim, int pos)//分割源字符、分割字符、返回容器元素位置
 {
@@ -38,12 +37,10 @@ inline std::string delim(std::string str,std::string delim, int pos)//分割源�
 inline bool IsAbsUrl(std::string url)
 {
     //根据URL的构成，由两部分构成：<Schema>:<特定于本schema的子串> 因此,只要直接判有没有字符 ":" 就行。有：是绝对，没有相对。
-    if(url.find(":") >= 0)
+    if(url.find(":") != string::npos)
         return true;
-    //url第一个字符为“.”或"/"时，为相对路径
-    else if(url[0] != "." || url[0] != "/")
+    if(url[0] != '.' && url[0] != '/')     //url第一个字符不为“.”或"/"时，为绝对路径
         return true;
-
     return false;
 }
 
@@ -53,48 +50,53 @@ int GetUrlLevel(std::string url)
     std::string temp;
     istringstream is(url);
     //将url分割放入容器，读取容器大小，即为level
-    while (getline(iss, temp, "/")) {
+    while (std::getline(is, temp, '/')) {
         delim_url.push_back(temp);
     }
-
-    return delim_url.size();    
+    if(url.find("//") != string::npos)
+        return delim_url.size() - 1;  
+    return delim_url.size(); 
 }
 
-inline std::string GetUrlDomain(std::string url){
-    // 获取url的主机
-    std::string com_domain;     //格式如www.abc.com
-    std::string mini_domain;    //得到com_domain中的最小级域名，如abc
-    //若url前面有http://,则分割后容器中第二个元素为域名，否则，第一个元素为域名
-    if(url.find("http://") >= 0)
+/*返回一个二级域名*/
+inline std::string GetUrlDomain(std::string url){  
+    std::string domain;
+
+    if(url.find("http://") != string::npos)
     {
-        com_domain = delim(url,"/",1);       
+        domain = delim(url,"/",1);   
+        return domain;  
     }
-    com_domain = delim(url,"/",0);
-    mini_domain = delim(com_domain,".",1);
-    return mini_domain;
+    domain = delim(url,"/",0);
+    return domain;
 }
 
+/*比较一级域名是否相等*/
 inline bool IsSameDomainUrl(std::string a, std::string b){
     
     std::string a_domain = GetUrlDomain(a);
     std::string b_domain = GetUrlDomain(b);
+    int n = a.find(".",0);
+
+    a_domain = a_domain.substr(n+1,a_domain.length());
+    b_domain = b_domain.substr(n+1,b_domain.length());
+
     if(a_domain == b_domain)    return true;
     return false;
 }
 
 
-inline std::string JoinUrl(std::string domain, std::string path){
-    //拼接url
-    std::string complete_url;
-    complete_url = domain + "/" + path;
-    return complete_url;
-}
+// inline std::string JoinUrl(std::string domain, std::string path){
+//     //拼接url
+//     std::string complete_url;
+//     complete_url = domain + "/" + path;
+//     return complete_url;
+// }
 
 inline std::string StdUrl(std::string url){
     //标准化url
     std::string std_url;
-    int position = url.find("http://");
-    if(position >= 0)        //匹配到http://
+    if(url.find("http://") != string::npos)        //匹配到http://
         return url;
     else
         std_url = "http://" + url;
