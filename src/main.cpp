@@ -30,7 +30,7 @@ int main(){
             par.ParseMainBody();
             auto data = usp::Data();
             data.body = par.body;
-            data.title = par.ReadMeta("title");
+            data.title = par.title;
             data.author = author;
             cout<<"INFO: "<<"爬取到内容页  URL: "<<url<<endl;
             data.Dumps("/Users/suchang/Code/unix_lab/unxi_spider/data/"+url);
