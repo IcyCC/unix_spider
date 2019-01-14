@@ -7,6 +7,7 @@
 #include <string>
 #include <map>
 #include <list>
+#include <sstream>
 #include <vector>
 
 inline bool IsSameDomainUrl(const std::string &a, const std::string &b) {
@@ -134,7 +135,7 @@ inline std::string DropTag(std::string s) {
     return List2String(l);
 }
 
-inline std::string Gethost(std::string url) {
+inline std::string GetHost(std::string url) {
     size_t pos = url.find("://");
     if (pos != url.npos)
         url = url.substr(pos + 3);
@@ -144,10 +145,6 @@ inline std::string Gethost(std::string url) {
     } else
         url = url.substr(0, pos);
     return url;
-}
-
-inline std::map<std::string, std::string> ParseHttpHeader(const std::string &raw) {
-    return std::map<std::string, std::string>();
 }
 
 inline std::pair<int, int> FindMaxTag2WordPos(const std::string &text, int start_pos, int end_pos) {
@@ -244,7 +241,7 @@ inline std::pair<int, int> FindMaxWord2TagPos(const std::string &text, int start
 }
 
 
-inline std::string Getpath(std::string url) {
+inline std::string GetPath(std::string url) {
     size_t pos = url.find("://");
     if (pos != url.npos) url = url.substr(pos + 3);
     pos = url.find('/');
@@ -255,33 +252,71 @@ inline std::string Getpath(std::string url) {
     return url;
 }
 
-inline std::map<std::string, std::string> ParseHttpHeader(std::string raw) {
-    int pos = raw.find("\n");
-    if (pos != raw.npos) raw = raw.substr(pos);
-    char *strc = new char[strlen(raw.c_str()) + 1];
-    strcpy(strc, raw.c_str());
-    std::string pattern = "\n";
-    std::vector<std::string> result;
-    char *tmpStr = strtok(strc, pattern.c_str());
-    while (tmpStr != NULL) {
-        result.push_back(std::string(tmpStr));
-        tmpStr = strtok(NULL, pattern.c_str());
+inline bool isLegal(char s){
+    if (s == ':' || s=='\r'|| s=='\n'){
+        return false;
     }
-    std::map <std::string, std::string> mapPara;
-    for (int i = 0; i < result.size(); i++) {
-        int pos = result[i].find(":");
-        if (pos != result[i].npos) {
-            std::string behind = result[i].substr(pos + 1);
-            std::string front = result[i].substr(0, pos);
-            mapPara.insert(std::pair<std::string, std::string>(front, behind));
+    return true;
+};
+
+
+inline std::map<std::string, std::string> ParseHttpHeader(std::string raw) {
+    enum class ParseMetaStatus {
+        NONE,
+        KEY,
+        VALUE,
+        BETWEEN
+    };
+    std::string tmp_key;
+    std::string tmp_value;
+
+    ParseMetaStatus status = ParseMetaStatus::NONE;
+
+    auto m = std::map<std::string, std::string>();
+
+    for (auto i : raw) {
+        if (status == ParseMetaStatus::NONE && isalpha(i)) {
+            status = ParseMetaStatus::KEY;
+            tmp_key.push_back(i);
+        } else if (status == ParseMetaStatus::KEY && i == ':') {
+            status = ParseMetaStatus::BETWEEN;
+        } else if (status == ParseMetaStatus::KEY) {
+            tmp_key.push_back(i);
+        } else if (status == ParseMetaStatus::BETWEEN && isLegal(i)) {
+            status = ParseMetaStatus::VALUE;
+            tmp_value.push_back(i);
+        } else if (status == ParseMetaStatus::VALUE && i == '\r') {
+            status = ParseMetaStatus::NONE;
+            m.insert(std::pair<std::string, std::string >(tmp_key, tmp_value));
+            tmp_key.clear();
+            tmp_value.clear();
+        }
+        else if (status == ParseMetaStatus::VALUE) {
+            tmp_value.push_back(i);
         }
     }
-    delete[] strc;
-    return mapPara;
+    return m;
+}
+
+inline std::string HttpHeader2String(std::map<std::string, std::string> header) {
+   std::string res;
+    for (auto i: header){
+        res = res+i.first + ": "+i.second + "\r\n";
+    }
+    return res;
+}
+
+inline int ParseResponseMeta(const std::string &text) {
+    auto res = text.substr(9, 3);
+    int code = -1;
+    std::stringstream ss;
+    ss << res;
+    ss >> code;
+    return code;
 }
 
 inline std::map<std::string, std::string> ParseUrl(std::string url) {
-    std::map <std::string, std::string> mapUrl;
+    std::map<std::string, std::string> mapUrl;
     int pos = url.find("://");
     std::string protocol;
     if (pos != url.npos)
