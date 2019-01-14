@@ -1,8 +1,20 @@
 #include "work_list.h"
 
+
+std::vector<std::string> unique_element_in_vector(std::vector<std::string> v)
+{
+	std::vector<std::string>::iterator vector_iterator;
+	vector_iterator = unique(v.begin(),v.end());
+	if(vector_iterator != v.end()){
+		v.erase(vector_iterator,v.end());
+	}
+	return v;
+}
+
 bool usp::WorkList::Put(std::string str)
 {
     unprocessed.push_back(str);
+    unprocessed = unique_element_in_vector(unprocessed);
     return true;
 }
 
