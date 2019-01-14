@@ -37,7 +37,7 @@ inline std::string delim(std::string str,std::string delim, int pos)//分割源�
 inline bool IsAbsUrl(std::string url)
 {
     //根据URL的构成，由两部分构成：<Schema>:<特定于本schema的子串> 因此,只要直接判有没有字符 ":" 就行。有：是绝对，没有相对。
-    if(url.find(":") != string::npos)
+    if(url.find(":") != std::string::npos)
         return true;
     if(url[0] != '.' && url[0] != '/')     //url第一个字符不为“.”或"/"时，为绝对路径
         return true;
@@ -48,12 +48,12 @@ int GetUrlLevel(std::string url)
 {
     std::vector<std::string> delim_url;
     std::string temp;
-    istringstream is(url);
+    std::istringstream is(url);
     //将url分割放入容器，读取容器大小，即为level
     while (std::getline(is, temp, '/')) {
         delim_url.push_back(temp);
     }
-    if(url.find("//") != string::npos)
+    if(url.find("//") != std::string::npos)
         return delim_url.size() - 1;  
     return delim_url.size(); 
 }
@@ -62,7 +62,7 @@ int GetUrlLevel(std::string url)
 inline std::string GetUrlDomain(std::string url){  
     std::string domain;
 
-    if(url.find("http://") != string::npos)
+    if(url.find("http://") != std::string::npos)
     {
         domain = delim(url,"/",1);   
         return domain;  
@@ -96,10 +96,14 @@ inline bool IsSameDomainUrl(std::string a, std::string b){
 inline std::string StdUrl(std::string url){
     //标准化url
     std::string std_url;
-    if(url.find("http://") != string::npos)        //匹配到http://
-        return url;
+    if(url.find("http://") != std::string::npos)        //匹配到http://
+    {
+        // if(url.find("www") != std::string::npos)        //匹配www
+             return url;
+    }
     else
         std_url = "http://" + url;
+    
     return std_url;
 }
 
