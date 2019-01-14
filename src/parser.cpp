@@ -62,7 +62,6 @@ bool usp::Parser::ParseMainBody() {
             }
         } else if ((IsBeginWith(token, "<div") || IsEndWith(token, "<DIV")) && token.back() == '>') {
             token.clear();
-            std::cout << "clear" << std::endl;
             while (!wait_delete_stack.empty()) {
                 auto i = wait_delete_stack.back();
                 sure_delete_stack.push_back(i);
@@ -123,20 +122,20 @@ bool usp::Parser::ParseMainBody() {
     int max_index = 0;
     int max_value = 0;
     for (int i = 0; i <= block_offset; i++) {
-        if (float(text_weights[i])/C_DISTANCE > C_LIMIT){
+        if (text_weights[i] > C_LIMIT){
             // 大于阈值当前为前一个阈值加1
             thr_record[(i + 1)] = thr_record[i] + 1;
 
             if (thr_record[i + 1] > max_value) {
                 max_index = i;
-                max_value = thr_record[i + i];
+                max_value = thr_record[i + 1];
             }
         }
     }
 
     auto pre = getRawBodyStr();
-    int start_pos = max_index-thr_record[max_index];
-    int end_pos = max_index;
+    int start_pos = (max_index-thr_record[max_index]) * C_DISTANCE;
+    int end_pos = max_index * C_DISTANCE;
     int mid_pos = ((end_pos - start_pos) / 2) + start_pos;
 
     auto start_info = FindMaxTag2WordPos(pre, start_pos, mid_pos);

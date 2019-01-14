@@ -180,8 +180,7 @@ inline std::list<char> String2List(std::string s) {
     }
     return res;
 }
-
-inline std::string DropTag(std::string s) {
+inline  std::string DropTag(std::string s){
     auto l = String2List(s);
     std::vector<std::list<char>::iterator> sure_delete_stack;
     enum DropTagStatus {
@@ -190,16 +189,19 @@ inline std::string DropTag(std::string s) {
     };
 
     DropTagStatus status = DropTagStatus::NONE;
-    for (auto it = l.begin(); it != l.end(); it++) {
+    for (auto it = l.begin(); it != l.end(); it++){
         char item = *it;
-        if (item == '<') {
+        if (item == '<'){
             status = DropTagStatus::TAG;
         }
-        if (status == DropTagStatus::TAG) {
+        if (status == DropTagStatus::TAG){
             sure_delete_stack.push_back(it);
         }
-        if (item == '>') {
+        if (item == '>'){
             status = DropTagStatus::NONE;
+        }
+        if (status == DropTagStatus::NONE && (item ==' ') ){
+            sure_delete_stack.push_back(it);
         }
     }
     while (!sure_delete_stack.empty()) {
@@ -209,7 +211,6 @@ inline std::string DropTag(std::string s) {
     }
     return List2String(l);
 }
-
 inline std::string GetHost(std::string url) {
     size_t pos = url.find("://");
     if (pos != url.npos)

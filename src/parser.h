@@ -20,8 +20,8 @@ namespace usp {
         std::string raw_text;
         std::string raw_header;
 
-        const int C_DISTANCE = 500;
-        const float C_LIMIT = 0.4;
+        const int C_DISTANCE = 100;
+        const float C_LIMIT = 0.6 * C_DISTANCE;
 
         std::string getRawBodyStr(){
             std::string res;
@@ -32,6 +32,8 @@ namespace usp {
         };
 
     public:
+        const std::string SPECIAL_NONE = "NULL&NONE";
+
         std::string body; //正文
         std::map<std::string, std::string> header;
         std::string title;
@@ -52,7 +54,7 @@ namespace usp {
         std::string ReadMeta(std::string key){
             auto r = header.find(key);
             if(r==header.end()){
-                return "";
+                return SPECIAL_NONE;
             } else {
                 return r->second;
             }

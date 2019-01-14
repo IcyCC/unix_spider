@@ -24,7 +24,7 @@ int main(){
         par.ParseHeader();
 
         auto author = par.ReadMeta("author");
-        if (author != ""){
+        if (author != par.SPECIAL_NONE){
             // 有作者详情页
             par.ParseMainBody();
             auto data = usp::Data();
