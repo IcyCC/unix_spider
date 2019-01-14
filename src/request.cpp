@@ -49,8 +49,10 @@ usp::Response usp::Request::Fetch() {
     }
 
     std::string res;
-    char buffer[4096];
-    while (recv(isock, buffer, 4096, 0) > 0) {
+    std::cout<< "INFO: 准备接受  URL: "<< url<<std::endl;
+
+    char buffer[1024];
+    while (recv(isock, buffer, 1024, 0) > 0) {
         res += buffer;
         memset(buffer, 0, sizeof(buffer));
     }

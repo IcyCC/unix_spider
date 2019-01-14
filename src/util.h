@@ -38,7 +38,7 @@ inline std::vector<std::string> SpliteString(std::string src, std::string sp) {
 
 
 /*创建类似于a/b/c/d 文件夹*/
-int CreateDirectory(const std::string directoryPath)
+inline int CreateDirectory(const std::string directoryPath)
 {
     int dirPathLen = directoryPath.length();
     if (dirPathLen > MAX_PATH_LEN)

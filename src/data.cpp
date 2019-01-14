@@ -1,4 +1,5 @@
 #include "data.h"
+#include "util.h"
 
 usp::Data usp::Data::Loads(std::string path)
 {
@@ -57,11 +58,11 @@ std::string  usp::Data::Dump() //生成字符串
 bool  usp::Data::Dumps (std::string path)// 写入到文件
 {
     usp::Data data;
+    CreateDirectory(path);
     std::fstream infile(path,std::ios::in|std::ios::out);
     if(!infile)
     {
         std::cout <<"open file error !"<<std::endl;
-        getchar();
         return false;
     }
     infile.write((char *)&data,sizeof(data));
