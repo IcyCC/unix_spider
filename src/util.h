@@ -74,20 +74,35 @@ inline bool IsSameDomainUrl(std::string a, std::string b) {
     std::string b_domain = GetUrlDomain(b);
     int n = a.find(".", 0);
 
-    a_domain = a_domain.substr(n + 1, a_domain.length());
-    b_domain = b_domain.substr(n + 1, b_domain.length());
-
     if (a_domain == b_domain) return true;
     return false;
 }
 
+inline std::vector<std::string> SpliteString(std::string src, std::string sp) {
+    // 分割字符串
+    std::string::size_type pos1, pos2;
+    std::vector<std::string> v;
+    pos2 = src.find(sp);
+    pos1 = 0;
+    while (std::string::npos != pos2) {
+        v.push_back(src.substr(pos1, pos2 - pos1));
 
- inline std::string JoinUrl(std::string domain, std::string path){
-     //拼接url
-     std::string complete_url;
-     complete_url = domain + "/" + path;
-     return complete_url;
- }
+        pos1 = pos2 + sp.size();
+        pos2 = src.find(sp, pos1);
+    }
+    if (pos1 != src.length()) {
+        v.push_back(src.substr(pos1));
+    }
+    return v;
+};
+
+
+inline std::string JoinUrl(std::string domain, std::string path) {
+    //拼接url
+    std::string complete_url;
+    complete_url = domain + "/" + path;
+    return complete_url;
+}
 
 inline std::string StdUrl(std::string url) {
     //标准化url
