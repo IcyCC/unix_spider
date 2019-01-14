@@ -9,7 +9,7 @@ bool usp::Request::SetHeader(std::map<std::string, std::string> h) {
 
 usp::Response usp::Request::Fetch() {
 
-
+    std::cout<< "INFO: 发送请求  URL: "<< url<<std::endl;
     int isock;
     struct sockaddr_in pin;
     struct hostent *remoteHost;
@@ -38,7 +38,6 @@ usp::Response usp::Request::Fetch() {
     message = message +method + " " +path + " HTTP/1.1\r\n" + header_0
             + header + "\r\n\r\n";
 
-    std::cout<< message<<std::endl;
     if (connect(isock, (struct sockaddr *) &pin, sizeof(pin)) == -1) {
         printf("Error connecting to socket\n");
         exit(1);
@@ -55,7 +54,7 @@ usp::Response usp::Request::Fetch() {
         res += buffer;
         memset(buffer, 0, sizeof(buffer));
     }
-
+    std::cout<< "INFO: 收到响应  URL: "<< url<<std::endl;
     close(isock);
     return Response(res);
 

@@ -12,4 +12,4 @@ add_executable(unxi_spider
         src/request.cpp
         src/work_list.cpp
         src/response.cpp
-        src/data.cpp)
+        src/data.cpp src/buffer.cpp src/buffer.cpp src/buffer.h)
