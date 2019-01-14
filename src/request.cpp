@@ -14,8 +14,8 @@ usp::Response usp::Request::Fetch() {
     struct sockaddr_in pin;
     struct hostent *remoteHost;
     std::string message;
-    std::string host = GetHost(url);//?url?????
-    //????????????????????Linux????????????????dns???????????????IP??host
+    std::string host = GetHost(url);//将url提取出域名
+    //判断能否解析主机，可能会出现的问题是某些Linux主机无法解析外网主机，需要设置、dns，如果仅仅是测试，可以采用本地IP作为host
     remoteHost = gethostbyname(host.c_str());
     if (remoteHost == 0) {
         printf("Error resolving host\n");
@@ -26,7 +26,7 @@ usp::Response usp::Request::Fetch() {
     pin.sin_port = htons(80);
     pin.sin_addr.s_addr = ((struct in_addr *) (remoteHost->h_addr))->s_addr;
 
-    //??socket
+    //打开socket
     if ((isock = socket(AF_INET, SOCK_STREAM, 0)) == -1) {
         printf("Error opening socket!\n");
         exit(1);
@@ -34,7 +34,7 @@ usp::Response usp::Request::Fetch() {
     std::string path = GetPath(url);
     std::string header_0;
     header_0 = "Host:" + host + "\r\n";
-    //??get??????????????????????
+    //采用get方式获取数据，没有传递参数情况下采用这种方式
     message = message +method + " " +path + " HTTP/1.1\r\n" + header_0
             + header + "\r\n\r\n";
 
