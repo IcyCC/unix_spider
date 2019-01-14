@@ -39,8 +39,9 @@ void *consume(void *args) {
             data.body = par.body;
             data.title = par.title;
             data.author = author;
+            data.domain = GetUrlDomain(url);
             cout << "INFO: " << "爬取到内容页  URL: " << url << endl;
-            data.Dumps("/Users/suchang/Code/unix_lab/unxi_spider/data/" + url);
+            data.Dumps("./data/" + url);
         }
         auto new_urls = par.GetAllUrls();
         pthread_mutex_lock(&work_lis_mutex);
