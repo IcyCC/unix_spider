@@ -13,10 +13,11 @@
 #include <unistd.h>
 #include <sys/types.h>
 #include <sys/stat.h>
+#include<stdio.h>
 
 #define MAX_PATH_LEN 100
 #define ACCESS(fileName,accessMode) access(fileName,accessMode)
-#define MKDIR(path) mkdir(path,S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH)
+#define MKDIR(path) mkdir(path,755)
 
 
 inline std::string& Ltrim(std::string &str) {
@@ -52,7 +53,7 @@ inline std::string& CleanString(std::string &str){
 }
 inline std::vector<std::string> SpliteString(std::string src, std::string sp) {
     // 分割字符串
-    std::string::size_type pos1, pos2;
+    std::string::size_type pos1, pos2=0;
     std::vector<std::string> v;
     pos2 = src.find(sp);
     pos1 = 0;
@@ -72,33 +73,15 @@ inline std::vector<std::string> SpliteString(std::string src, std::string sp) {
 /*创建类似于a/b/c/d 文件夹*/
 inline int CreateDirectory(const std::string directoryPath)
 {
-    std::string temp;
-
-    if(directoryPath[0] == '/')
-        temp = "." + directoryPath;   
-    else
-        temp = directoryPath;
-    
-    int dirPathLen = temp.length();
-    if (dirPathLen > MAX_PATH_LEN)
-    {
-        return -1;  
-    }
-
-    char tmpDirPath[MAX_PATH_LEN] = { 0 };
-    for (int i = 0; i < dirPathLen; ++i)
-    {
-        tmpDirPath[i] = temp[i];
-        if (tmpDirPath[i] == '\\' || tmpDirPath[i] == '/')
-        {
-            if (ACCESS(tmpDirPath, 0) != 0)
-            {
-                int ret = MKDIR(tmpDirPath);
-                if (ret != 0)
-                {
-                    return ret;
-                }
-            }
+    auto temp = SpliteString(directoryPath, "/");
+    temp.pop_back();
+    std::string tmp_path = "";
+    for(auto i : temp){
+        tmp_path += i;
+        tmp_path +="/";
+        auto ok = MKDIR(tmp_path.c_str());
+        if (ok == -1){
+            perror("MKDIR");
         }
     }
     return 0;
@@ -388,6 +371,9 @@ inline std::string HttpHeader2String(std::map<std::string, std::string> header) 
 }
 
 inline int ParseResponseMeta(const std::string &text) {
+    if (text.length() < 3){
+        return 500;
+    }
     auto res = text.substr(9, 3);
     int code = -1;
     std::stringstream ss;

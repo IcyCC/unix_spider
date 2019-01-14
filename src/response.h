@@ -16,6 +16,9 @@ namespace usp {
         int status;
         std::string body;
         Response(const std::string& _raw){
+            if(_raw.length() < 3){
+                return ;
+            }
             raw = _raw;
             // 解析body
             unsigned long pos=raw.find("\r\n\r\n");

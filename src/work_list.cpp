@@ -13,8 +13,15 @@ std::vector<std::string> unique_element_in_vector(std::vector<std::string> v)
 
 bool usp::WorkList::Put(std::string str)
 {
+    for(int i =  0; i < unprocessed.size(); i++){
+        if(unprocessed[i] == str)
+            return false;
+    }
+    for(int i =  0; i < processed.size(); i++){
+        if(processed[i] == str)
+            return false;
+    }
     unprocessed.push_back(str);
-    unprocessed = unique_element_in_vector(unprocessed);
     return true;
 }
 

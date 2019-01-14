@@ -3,7 +3,7 @@
 #include<vector>
 #include <algorithm> 
 #include <iterator> 
-
+#include <cstdio>
 namespace usp{
     class WorkList {
         public:
