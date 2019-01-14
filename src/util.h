@@ -19,24 +19,6 @@
 #define ACCESS(fileName,accessMode) access(fileName,accessMode)
 #define MKDIR(path) mkdir(path,755)
 
-
-inline std::string& Ltrim(std::string &str) {
-    std::string::iterator p = find_if(str.begin(), str.end(), not1(std::ptr_fun<int, int>(isspace)));
-    str.erase(str.begin(), p);
-    return str;
-}
-
-inline std::string& Rtrim(std::string &str) {
-    std::string::reverse_iterator p = find_if(str.rbegin(), str.rend(), not1(std::ptr_fun<int , int>(isspace)));
-    str.erase(p.base(), str.end());
-    return str;
-}
-
-inline std::string& Trim(std::string &str) {
-    Ltrim(Rtrim(str));
-    return str;
-}
-
 inline std::string& CleanString(std::string &str){
     std::vector<std::string::iterator> delete_stack;
     for (auto it = str.begin(); it!=str.cend(); it++){
