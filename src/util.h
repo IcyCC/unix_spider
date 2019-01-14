@@ -47,7 +47,7 @@ inline std::string ConvUtf8(const std::string src,const std::string charset)
     free(inbuf_head);
     free(outbuf_head);
 
-    return res;
+    return src;
 }
 
 inline std::string& CleanString(std::string &str){

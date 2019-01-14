@@ -28,6 +28,9 @@ int main() {
             cout << "ERROR" << "  URL: " << url << "失败  状态码 :" << resp.status << endl;
             if (resp.status > 300 && resp.status <310){
                auto redir_url = resp.ReadHeader("Locatioin");
+               if (redir_url == ""){
+                   continue;
+               }
                redir_url = StdUrl(redir_url);
                if(!IsSameDomainUrl(url, redir_url)){
                    work_list.Put(redir_url);
