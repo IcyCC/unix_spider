@@ -33,7 +33,7 @@ usp::Response usp::Request::Fetch() {
     }
     std::string path = GetPath(url);
     std::string header_0;
-    header_0 = "Host:" + host + "\r\n";
+    header_0 = "Host: " + host + "\r\n";
     //采用get方式获取数据，没有传递参数情况下采用这种方式
     message = message +method + " " +path + " HTTP/1.1\r\n" + header_0
             + header + "\r\n\r\n";
