@@ -10,6 +10,13 @@
 #include <sstream>
 #include <vector>
 #include <cstring>
+#include <unistd.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+
+#define MAX_PATH_LEN 100
+#define ACCESS(fileName,accessMode) access(fileName,accessMode)
+#define MKDIR(path) mkdir(path,S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH)
 
 inline std::vector<std::string> SpliteString(std::string src, std::string sp) {
     // 分割字符串
@@ -29,6 +36,33 @@ inline std::vector<std::string> SpliteString(std::string src, std::string sp) {
     return v;
 };
 
+
+/*创建类似于a/b/c/d 文件夹*/
+int CreateDirectory(const std::string directoryPath)
+{
+    int dirPathLen = directoryPath.length();
+    if (dirPathLen > MAX_PATH_LEN)
+    {
+        return -1;
+    }
+    char tmpDirPath[MAX_PATH_LEN] = { 0 };
+    for (int i = 0; i < dirPathLen; ++i)
+    {
+        tmpDirPath[i] = directoryPath[i];
+        if (tmpDirPath[i] == '\\' || tmpDirPath[i] == '/')
+        {
+            if (ACCESS(tmpDirPath, 0) != 0)
+            {
+                int ret = MKDIR(tmpDirPath);
+                if (ret != 0)
+                {
+                    return ret;
+                }
+            }
+        }
+    }
+    return 0;
+}
 
 
 inline bool IsBeginWith(std::string s, std::string m) {
