@@ -66,8 +66,12 @@ inline bool IsSameDomainUrl(std::string a, std::string b) {
     std::string a_domain = GetUrlDomain(a);
     std::string b_domain = GetUrlDomain(b);
 
-//    auto a_level_domain = SpliteString(a_domain,);
-    if (a_domain == b_domain) return true;
+    auto a_level_domain = SpliteString(a_domain, ".");
+    auto b_level_domain = SpliteString(b_domain, ".");
+
+    a_level_domain.pop_back();
+    b_level_domain.pop_back();
+    if (a_level_domain.back() == b_level_domain.back()) { return true; }
     return false;
 }
 
