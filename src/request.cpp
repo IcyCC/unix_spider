@@ -29,6 +29,7 @@ usp::Response usp::Request::Fetch() {
     //打开socket
     if ((isock = socket(AF_INET, SOCK_STREAM, 0)) == -1) {
         printf("Error opening socket!\n");
+        return Response("");
     }
     std::string path = GetPath(url);
     std::string header_0;
