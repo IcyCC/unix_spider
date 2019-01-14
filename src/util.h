@@ -18,6 +18,38 @@
 #define ACCESS(fileName,accessMode) access(fileName,accessMode)
 #define MKDIR(path) mkdir(path,S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH)
 
+
+inline std::string& Ltrim(std::string &str) {
+    std::string::iterator p = find_if(str.begin(), str.end(), not1(std::ptr_fun<int, int>(isspace)));
+    str.erase(str.begin(), p);
+    return str;
+}
+
+inline std::string& Rtrim(std::string &str) {
+    std::string::reverse_iterator p = find_if(str.rbegin(), str.rend(), not1(std::ptr_fun<int , int>(isspace)));
+    str.erase(p.base(), str.end());
+    return str;
+}
+
+inline std::string& Trim(std::string &str) {
+    Ltrim(Rtrim(str));
+    return str;
+}
+
+inline std::string& CleanString(std::string &str){
+    std::vector<std::string::iterator> delete_stack;
+    for (auto it = str.begin(); it!=str.cend(); it++){
+        if ((*it) == '\r'||(*it) == '\n'||(*it) == ' '){
+            delete_stack.push_back(it);
+        }
+    }
+    while(!delete_stack.empty()){
+        auto i = delete_stack.back();
+        delete_stack.pop_back();
+        str.erase(i);
+    }
+    return str;
+}
 inline std::vector<std::string> SpliteString(std::string src, std::string sp) {
     // 分割字符串
     std::string::size_type pos1, pos2;
@@ -38,7 +70,7 @@ inline std::vector<std::string> SpliteString(std::string src, std::string sp) {
 
 
 /*创建类似于a/b/c/d 文件夹*/
-int CreateDirectory(const std::string directoryPath)
+inline int CreateDirectory(const std::string directoryPath)
 {
     std::string temp;
 

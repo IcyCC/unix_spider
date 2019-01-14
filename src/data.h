@@ -12,6 +12,7 @@ namespace usp{
             std::string body; //正文
             std::string title; //标题
             std::string author; //作者
+            std::string domain; //域名
 
             static Data  Loads(std::string path); //从文件加载
             bool Load(std::string );        //从字符串加载
