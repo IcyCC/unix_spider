@@ -210,7 +210,9 @@ std::vector<std::string> usp::Parser::GetAllUrls() {
             token.clear();
         } else if (status == UrlParseStatus::URL && i == '"') {
             token.pop_back();
-            res.push_back(token);
+            if (!IsBeginWith(token, "java")){
+                res.push_back(token);
+            }
             token.clear();
             status = UrlParseStatus::NONE;
         }
