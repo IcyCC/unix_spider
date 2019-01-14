@@ -18,7 +18,7 @@ auto work_list = usp::WorkList();
 int main() {
     const int P_NUM = 10;
 
-    work_list.Put("http://legal.people.com.cn/n1/2019/0114/c42510-30537367.html");
+    work_list.Put("http://www.gmw.cn/");
     while (!work_list.IsEmpty()) {
 
         auto url = work_list.Get();

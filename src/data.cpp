@@ -1,5 +1,7 @@
 #include "data.h"
 #include "util.h"
+#include <locale> 
+#include <codecvt> 
 
 usp::Data usp::Data::Loads(std::string path)
 {
@@ -57,6 +59,7 @@ std::string  usp::Data::Dump() //生成字符串
 bool  usp::Data::Dumps (std::string path)// 写入到文件
 {
     CreateDirectory(path);
+
     std::ofstream infile(path.c_str(),std::ios::out);
     if(!infile)
     {
@@ -66,7 +69,9 @@ bool  usp::Data::Dumps (std::string path)// 写入到文件
     }
     auto res = Dump();
     std::cout<<res<<std::endl;
-    infile<<res.c_str();
+    std::string temp;
+    temp = ConvUtf8(res,coding);
+    infile<<temp;
     infile.close();
     return true;
 }

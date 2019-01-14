@@ -5,6 +5,7 @@
 #include<fstream>
 #include<istream>
 #include<vector>
+#include <codecvt>
 
 namespace usp{
     class Data {
