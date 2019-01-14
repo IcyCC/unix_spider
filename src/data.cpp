@@ -57,6 +57,9 @@ std::string  usp::Data::Dump() //生成字符串
 bool  usp::Data::Dumps (std::string path)// 写入到文件
 {
     CreateDirectory(path);
+    std::wstring_convert<std::codecvt_utf8<wchar_t>> conv;
+    
+    std::string narrowStr = conv.to_bytes(path.c_str()); //文件是utf8编码
     std::ofstream infile(path.c_str(),std::ios::out);
     if(!infile)
     {
@@ -64,6 +67,7 @@ bool  usp::Data::Dumps (std::string path)// 写入到文件
         perror("READ");
         return false;
     }
+    infile << narrowStr;
     auto res = Dump();
     std::cout<<res<<std::endl;
     infile<<res.c_str();
