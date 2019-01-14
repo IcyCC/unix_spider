@@ -4,24 +4,12 @@
 
 #include "util.h"
 
-inline std::string delim(std::string str, std::string delim, int pos)//分割源字符、分割字符、返回容器元素位置
+inline std::string delim(std::string str, std::string sp, int pos)//分割源字符、分割字符、返回容器元素位置
 {
-    std::vector<std::string> res;
-    char *strs = new char[str.length() + 1];
-    strcpy(strs, str.c_str());
-
-    char *d = new char[delim.length() + 1];
-    strcpy(d, delim.c_str());
-
-    char *p = strtok(strs, d);
-    while (p) {
-        std::string s = p;
-        res.push_back(s);
-        p = strtok(NULL, d);
+    auto res = SpliteString(str, sp);
+    if (pos >= res.length()){
+        return "";
     }
-
-    delete[] strs;
-    delete[] d;
     return res[pos];
 }
 
