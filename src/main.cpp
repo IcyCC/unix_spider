@@ -18,7 +18,7 @@ auto work_list = usp::WorkList();
 int main() {
     const int P_NUM = 10;
 
-    work_list.Put("http://www.gmw.cn/");
+    work_list.Put("http://legal.people.com.cn/n1/2019/0114/c42510-30537367.html");
     while (!work_list.IsEmpty()) {
 
         auto url = work_list.Get();
@@ -34,7 +34,7 @@ int main() {
         par.ParseHeader();
 
         auto author = par.ReadMeta("author");
-        if (author != par.SPECIAL_NONE) {
+        if (author != usp::SPECIAL_NONE) {
             // 有作者详情页
             par.ParseMainBody();
             auto data = usp::Data();
@@ -42,6 +42,7 @@ int main() {
             data.title = par.title;
             data.author = author;
             data.domain = GetUrlDomain(url);
+            data.coding = ReadCoderByHeader(par.header);
             cout << "INFO: " << "爬取到内容页  URL: " << url << endl;
             data.Dumps("./data/" + data.domain + "/" +data.title+".txt");
         }
