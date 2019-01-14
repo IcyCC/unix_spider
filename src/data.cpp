@@ -49,23 +49,23 @@ bool  usp::Data::Load(std::string str) //从字符串加载
 
 std::string  usp::Data::Dump() //生成字符串
 {
-    usp::Data data;
     std::string str;
-    str = data.title + " " + data.author + " " + data.body;
+    str = title + " " + author + " " + body;
     return str;
 }
 
 bool  usp::Data::Dumps (std::string path)// 写入到文件
 {
-    usp::Data data;
     CreateDirectory(path);
-    std::fstream infile(path,std::ios::in|std::ios::out);
+    std::ofstream infile(path.c_str(),std::ios::out);
     if(!infile)
     {
         std::cout <<"open file error !"<<std::endl;
+        perror("READ");
         return false;
     }
-    infile.write((char *)&data,sizeof(data));
+    auto res = Dump();
+    infile.write(res.c_str(),sizeof(res.c_str()));
     infile.close();
     return true;
 }

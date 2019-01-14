@@ -143,7 +143,7 @@ bool usp::Parser::ParseMainBody() {
     // 找开始点
 
     body = DropTag(pre.substr(start_info.first, end_info.first));
-    body = Trim(body);
+    body = CleanString(body);
     return true;
 }
 

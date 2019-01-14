@@ -19,7 +19,7 @@ usp::Response usp::Request::Fetch() {
     remoteHost = gethostbyname(host.c_str());
     if (remoteHost == 0) {
         printf("Error resolving host\n");
-        exit(1);
+        return Response("");
     }
     bzero(&pin, sizeof(pin));
     pin.sin_family = AF_INET;

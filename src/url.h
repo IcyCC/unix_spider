@@ -7,7 +7,7 @@
 inline std::string delim(std::string str, std::string sp, int pos)//分割源字符、分割字符、返回容器元素位置
 {
     auto res = SpliteString(str, sp);
-    if (pos >= res.length()){
+    if (pos >= res.size()){
         return "";
     }
     return res[pos];
@@ -40,8 +40,8 @@ inline int GetUrlLevel(std::string url) {
 inline std::string GetUrlDomain(std::string url) {
     std::string domain;
 
-    if (url.find("http://") != std::string::npos) {
-        domain = delim(url, "/", 1);
+    if (url.find("http://") != std::string::npos && url.length() > 10) {
+        domain = delim(url, "/", 2);
         return domain;
     }
     domain = delim(url, "/", 0);
@@ -56,6 +56,9 @@ inline bool IsSameDomainUrl(std::string a, std::string b) {
 
     auto a_level_domain = SpliteString(a_domain, ".");
     auto b_level_domain = SpliteString(b_domain, ".");
+    if (a_level_domain.size()<2 || a_level_domain.size()<2){
+        return false;
+    }
 
     a_level_domain.pop_back();
     b_level_domain.pop_back();
