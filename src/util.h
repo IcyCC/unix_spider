@@ -51,6 +51,16 @@ inline std::vector<std::string> SpliteString(std::string src, std::string sp) {
     return v;
 };
 
+inline std::string & ToLower(std::string& s){
+    int len=s.size();
+    for(int i=0;i<len;i++){
+        if(s[i]>='A'&&s[i]<='Z'){
+            s[i]+=32;//+32转换为小写
+        }
+    }
+    return s;
+}
+
 
 /*创建类似于a/b/c/d 文件夹*/
 inline int CreateDirectory(const std::string directoryPath)
@@ -107,6 +117,8 @@ inline std::pair<std::string, std::string> ParseMeta(std::string text) {
     std::string token;
     std::string name;
     std::string content;
+
+    text = ToLower(text);
 
     for (auto i : text) {
         token.push_back(i);
@@ -382,4 +394,23 @@ inline std::map<std::string, std::string> ParseUrl(std::string url) {
         for(it = mapUrl.begin(); it != mapUrl.end(); it++)
                 cout << it->first << " " << it->second << endl;*/
     return mapUrl;
+}
+
+
+inline std::string ReadCoderByHeader(std::map<std::string, std::string>& h){
+    auto s = h.find("charset");
+    if(s != h.end()){
+       return s->second;
+    }
+    s= h.find("content-type");
+    if(s != h.end()){
+        if (s->second == "text/html;charset=gb2312") {
+            return "gb2312";
+        } else if(s->second == "text/html;charset=utf-8"){
+            return "utf-8";
+        } else if (s->second == "text/html;charset=gbk"){
+            return "gbk";
+        }
+    }
+    return "utf-8";
 }
