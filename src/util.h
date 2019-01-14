@@ -167,7 +167,7 @@ inline std::string DropTag(std::string s) {
     std::vector<std::list<char>::iterator> sure_delete_stack;
     enum DropTagStatus {
         NONE,
-        TAG
+        TAG,
     };
 
     DropTagStatus status = DropTagStatus::NONE;

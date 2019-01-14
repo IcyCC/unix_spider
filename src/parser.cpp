@@ -4,9 +4,9 @@
 usp::Parser::Parser(std::string raw) {
     raw_text = raw;
 
-    auto  body_begin = raw.find("<body");
+    auto body_begin = raw.find("<body");
     auto body_end = raw.rfind("/body>");
-    if(body_begin!=std::string::npos && body_end != std::string::npos){
+    if (body_begin != std::string::npos && body_end != std::string::npos) {
         raw_body = raw.substr(
                 body_begin,
                 body_end
@@ -17,10 +17,10 @@ usp::Parser::Parser(std::string raw) {
         l_raw_body.push_back(i);
     }
 
-    auto  header_begin = raw.find("<head");
+    auto header_begin = raw.find("<head");
     auto header_end = raw.rfind("/head>");
 
-    if(header_begin!=std::string::npos && header_end != std::string::npos){
+    if (header_begin != std::string::npos && header_end != std::string::npos) {
         raw_header = raw.substr(
                 header_begin,
                 header_end
@@ -39,11 +39,53 @@ bool usp::Parser::ParseMainBody() {
     std::string token; // 缓存当前读到的token
     std::vector<std::list<char>::iterator> wait_delete_stack;
     std::vector<std::list<char>::iterator> sure_delete_stack;
+    enum PRE_PROCESS_STATUS {
+        NONE,
+        SCRIPT
+    };
 
+    PRE_PROCESS_STATUS pre_status = PRE_PROCESS_STATUS::NONE;
     for (auto it = l_raw_body.begin(); it != l_raw_body.end(); it++) {
         char item = *(it);
-        if (IsBeginWith(token, "<!-")) {
-            if (IsEndWith(token, "->")) {
+        if (pre_status == PRE_PROCESS_STATUS::NONE) {
+            if (IsBeginWith(token, "<!-")) {
+                if (IsEndWith(token, "->")) {
+                    token.clear();
+                    while (!wait_delete_stack.empty()) {
+                        auto i = wait_delete_stack.back();
+                        sure_delete_stack.push_back(i);
+                        wait_delete_stack.pop_back();
+                    }
+                }
+            } else if (IsBeginWith(token, "/*")) {
+                if (IsEndWith(token, "*/")) {
+                    token.clear();
+                    while (!wait_delete_stack.empty()) {
+                        auto i = wait_delete_stack.back();
+                        sure_delete_stack.push_back(i);
+                        wait_delete_stack.pop_back();
+                    }
+                }
+            } else if ((IsBeginWith(token, "<div") || IsEndWith(token, "<DIV")) && token.back() == '>') {
+                token.clear();
+                while (!wait_delete_stack.empty()) {
+                    auto i = wait_delete_stack.back();
+                    sure_delete_stack.push_back(i);
+                    wait_delete_stack.pop_back();
+                }
+            } else if (token == "</div>" || token == "</DIV>") {
+                token.clear();
+                while (!wait_delete_stack.empty()) {
+                    auto i = wait_delete_stack.back();
+                    sure_delete_stack.push_back(i);
+                    wait_delete_stack.pop_back();
+                }
+            } else if (item == '<') {
+                // 当不以 <! /* 为开始 说明是普通内容 遇到<清空不删除 直接清除
+                token.clear();
+                wait_delete_stack.clear();
+            } else if (token == "<script") {
+                pre_status = PRE_PROCESS_STATUS::SCRIPT;
                 token.clear();
                 while (!wait_delete_stack.empty()) {
                     auto i = wait_delete_stack.back();
@@ -51,44 +93,29 @@ bool usp::Parser::ParseMainBody() {
                     wait_delete_stack.pop_back();
                 }
             }
-        } else if (IsBeginWith(token, "/*")) {
-            if (IsEndWith(token, "*/")) {
+            token.push_back(item);
+            wait_delete_stack.push_back(it);
+        } else if (pre_status == PRE_PROCESS_STATUS::SCRIPT) {
+            if(item == '<'){
                 token.clear();
-                while (!wait_delete_stack.empty()) {
-                    auto i = wait_delete_stack.back();
-                    sure_delete_stack.push_back(i);
-                    wait_delete_stack.pop_back();
-                }
             }
-        } else if ((IsBeginWith(token, "<div") || IsEndWith(token, "<DIV")) && token.back() == '>') {
-            token.clear();
-            while (!wait_delete_stack.empty()) {
-                auto i = wait_delete_stack.back();
-                sure_delete_stack.push_back(i);
-                wait_delete_stack.pop_back();
+            token.push_back(item);
+            if (token == "</script>"){
+                token.clear();
+                pre_status = PRE_PROCESS_STATUS::NONE;
             }
-        } else if (token == "</div>" || token == "</DIV>") {
-            token.clear();
-            while (!wait_delete_stack.empty()) {
-                auto i = wait_delete_stack.back();
-                sure_delete_stack.push_back(i);
-                wait_delete_stack.pop_back();
-            }
-        } else if (item == '<') {
-            // 当不以 <! /* 为开始 说明是普通内容 遇到<清空不删除 直接清除
-            token.clear();
-            wait_delete_stack.clear();
+            sure_delete_stack.push_back(it);
         }
-        token.push_back(item);
-        wait_delete_stack.push_back(it);
+
     };
+
 
     while (!sure_delete_stack.empty()) {
         auto i = sure_delete_stack.back();
         l_raw_body.erase(i);
         sure_delete_stack.pop_back();
     }
-
+    auto s = List2String(l_raw_body);
     // 2.文本密度计算
     int ch_offset = 0; // 标记字符偏移量
     int block_offset = 0; // 记录块便宜
@@ -122,7 +149,7 @@ bool usp::Parser::ParseMainBody() {
     int max_index = 0;
     int max_value = 0;
     for (int i = 0; i <= block_offset; i++) {
-        if (text_weights[i] > C_LIMIT){
+        if (text_weights[i] > C_LIMIT) {
             // 大于阈值当前为前一个阈值加1
             thr_record[(i + 1)] = thr_record[i] + 1;
 
@@ -134,7 +161,7 @@ bool usp::Parser::ParseMainBody() {
     }
 
     auto pre = getRawBodyStr();
-    int start_pos = (max_index-thr_record[max_index]) * C_DISTANCE;
+    int start_pos = (max_index - thr_record[max_index]) * C_DISTANCE;
     int end_pos = max_index * C_DISTANCE;
     int mid_pos = ((end_pos - start_pos) / 2) + start_pos;
 
@@ -211,7 +238,7 @@ std::vector<std::string> usp::Parser::GetAllUrls() {
             token.clear();
         } else if (status == UrlParseStatus::URL && i == '"') {
             token.pop_back();
-            if (!IsBeginWith(token, "java")){
+            if (!IsBeginWith(token, "java")) {
                 res.push_back(token);
             }
             token.clear();
