@@ -13,7 +13,7 @@
 #include <unistd.h>
 #include <sys/types.h>
 #include <sys/stat.h>
-//#include <iconv.h>
+#include <iconv.h>
 #include<stdio.h>
 
 #define MAX_PATH_LEN 100
@@ -23,29 +23,29 @@
 
 inline std::string ConvUtf8(const std::string src,const std::string charset)
 {
-//    if(charset.empty() || charset == "utf-8" || charset == "UTF-8" )
-//    {
-//        return src;
-//    }
-//    std::string res;
-//
-//    auto inlen = src.size() + 1;
-//    auto inbuf = (char *) malloc(inlen);
-//    inbuf[0] = 0;
-//    strcat(inbuf,src.c_str());
-//
-//    auto outlen = inlen * 2;
-//    auto outbuf = (char *) malloc(outlen);
-//
-//    auto inbuf_head = inbuf, outbuf_head = outbuf;
-//
-//    auto cd = iconv_open("utf-8","gb2312");
-//    iconv(cd, &inbuf,&inlen,&outbuf,&outlen);
-//    iconv_close(cd);
-//
-//    res = outbuf_head;
-//    free(inbuf_head);
-//    free(outbuf_head);
+    if(charset.empty() || charset == "utf-8" || charset == "UTF-8" )
+    {
+        return src;
+    }
+    std::string res;
+
+    auto inlen = src.size() + 1;
+    auto inbuf = (char *) malloc(inlen);
+    inbuf[0] = 0;
+    strcat(inbuf,src.c_str());
+
+    auto outlen = inlen * 2;
+    auto outbuf = (char *) malloc(outlen);
+
+    auto inbuf_head = inbuf, outbuf_head = outbuf;
+
+    auto cd = iconv_open("utf-8","gb2312");
+    iconv(cd, &inbuf,&inlen,&outbuf,&outlen);
+    iconv_close(cd);
+
+    res = outbuf_head;
+    free(inbuf_head);
+    free(outbuf_head);
 
     return src;
 }
