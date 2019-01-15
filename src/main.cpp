@@ -64,8 +64,8 @@ int main() {
                     work_list.Put(std_n_url);
                 }
             } else {
-                auto std_n_url = JoinUrl(url, url);
-                work_list.Put(std_n_url);
+//                auto std_n_url = JoinUrl(url, url);
+//                work_list.Put(std_n_url);
             }
 
         }
