@@ -42,18 +42,16 @@ int main() {
         par.ParseHeader();
 
         auto author = par.ReadMeta("author");
-        if (author != usp::SPECIAL_NONE) {
             // 有作者详情页
-            par.ParseMainBody();
-            auto data = usp::Data();
-            data.body = par.body;
-            data.title = par.title;
-            data.author = author;
-            data.domain = GetUrlDomain(url);
-            data.coding = ReadCoderByHeader(par.header);
-            cout << "INFO: " << "爬取到内容页  URL: " << url << endl;
-            data.Dumps("./data/" + data.domain + "/" +data.title+".txt");
-        }
+        par.ParseMainBody();
+        auto data = usp::Data();
+        data.body = par.body;
+        data.title = par.title;
+        data.author = author;
+        data.domain = GetUrlDomain(url);
+        data.coding = ReadCoderByHeader(par.header);
+        cout << "INFO: " << "爬取到内容页  URL: " << url << endl;
+        data.Dumps("./data/" + data.domain + "/" +data.title+".txt");
         auto new_urls = par.GetAllUrls();
         for (auto n_url : new_urls) {
             string std_n_url;
